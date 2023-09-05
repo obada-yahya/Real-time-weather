@@ -4,8 +4,9 @@ namespace RealTimeWeather;
 
 public class XmlFormat : IDataFormat
 {
-    private IDataFormat.Data ValidateData(XDocument xml)
+    public IDataFormat.Data ValidateData(object format)
     {
+        var xml = format as XDocument;
         bool isLocationExist = xml.Root.Element("Location") != null;
         bool isTemperatureExist = xml.Root.Element("Temperature") != null;
         bool isHumidityExist = xml.Root.Element("Humidity") != null;
@@ -19,9 +20,8 @@ public class XmlFormat : IDataFormat
             throw new Exception("Invalid data type for numeric type");
         }
         throw new Exception("Data is missing. Please provide the required data.");
-        
     }
-    public IDataFormat.Data GetData(string format)
+    public IDataFormat.Data? GetData(string format)
     {
         try
         {
@@ -38,6 +38,7 @@ public class XmlFormat : IDataFormat
             Console.WriteLine(exception.Message);
         }
         return null;
-        
     }
+
+    
 }

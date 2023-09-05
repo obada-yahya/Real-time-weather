@@ -1,12 +1,12 @@
-﻿using System.Text.Json;
-using System.Text.Json.Nodes;
+﻿using System.Text.Json.Nodes;
 
 namespace RealTimeWeather;
 
 public class JsonFormat : IDataFormat
 {
-    private IDataFormat.Data ValidateData(JsonObject json)
+    public IDataFormat.Data ValidateData(object format)
     {
+        var json = format as JsonObject;
         bool isLocationExist = json.ContainsKey("Location");
         bool isTemperatureExist = json.ContainsKey("Temperature");
         bool isHumidityExist = json.ContainsKey("Humidity");
@@ -20,7 +20,6 @@ public class JsonFormat : IDataFormat
             throw new Exception("Invalid data type for numeric type");
         }
         throw new Exception("Data is missing. Please provide the required data.");
-        
     }
     public IDataFormat.Data? GetData(string format)
     {
@@ -40,4 +39,6 @@ public class JsonFormat : IDataFormat
         }
         return null;
     }
+
+    
 }
