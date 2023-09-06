@@ -4,7 +4,7 @@ namespace RealTimeWeather;
 
 public class JsonFormat : IDataFormat
 {
-    public IDataFormat.Data ValidateData(object format)
+    public LocationWeatherInfo ValidateWeatherData(object format)
     {
         var json = format as JsonObject;
         bool isLocationExist = json.ContainsKey("Location");
@@ -13,20 +13,21 @@ public class JsonFormat : IDataFormat
         if (isLocationExist && isTemperatureExist && isHumidityExist)
         {
             string location = json["Location"].ToString();
-            bool isValidTemperature = float.TryParse(json["Temperature"].ToString(),out float temperature);
-            bool isValidHumidity = float.TryParse(json["Humidity"].ToString(),out float humidity);
+            bool isValidTemperature = float.TryParse(json["Temperature"].ToString(), out float temperature);
+            bool isValidHumidity = float.TryParse(json["Humidity"].ToString(), out float humidity);
             if(isValidTemperature && isValidHumidity)
-                return new IDataFormat.Data(location,temperature,humidity);
+                return new LocationWeatherInfo(location,temperature,humidity);
             throw new Exception("Invalid data type for numeric type");
         }
         throw new Exception("Data is missing. Please provide the required data.");
     }
-    public IDataFormat.Data? GetData(string format)
+    
+    public LocationWeatherInfo? GetWeatherData(string format)
     {
         try
         {
             JsonObject json = JsonObject.Parse(format) as JsonObject;
-            IDataFormat.Data data = ValidateData(json);
+            LocationWeatherInfo data = ValidateWeatherData(json);
             return data;
         }
         catch (System.Text.Json.JsonException exception)
@@ -39,6 +40,4 @@ public class JsonFormat : IDataFormat
         }
         return null;
     }
-
-    
 }

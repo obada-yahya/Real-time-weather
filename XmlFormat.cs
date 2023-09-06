@@ -4,7 +4,7 @@ namespace RealTimeWeather;
 
 public class XmlFormat : IDataFormat
 {
-    public IDataFormat.Data ValidateData(object format)
+    public LocationWeatherInfo ValidateWeatherData(object format)
     {
         var xml = format as XDocument;
         bool isLocationExist = xml.Root.Element("Location") != null;
@@ -13,20 +13,21 @@ public class XmlFormat : IDataFormat
         if (isLocationExist && isTemperatureExist && isHumidityExist)
         {
             string location = xml.Root.Element("Location").Value;
-            bool isValidTemperature = float.TryParse(xml.Root.Element("Temperature").Value,out float temperature);
-            bool isValidHumidity = float.TryParse(xml.Root.Element("Humidity").Value,out float humidity);
+            bool isValidTemperature = float.TryParse(xml.Root.Element("Temperature").Value, out float temperature);
+            bool isValidHumidity = float.TryParse(xml.Root.Element("Humidity").Value, out float humidity);
             if(isValidTemperature && isValidHumidity)
-                return new IDataFormat.Data(location,temperature,humidity);
+                return new LocationWeatherInfo(location,temperature,humidity);
             throw new Exception("Invalid data type for numeric type");
         }
         throw new Exception("Data is missing. Please provide the required data.");
     }
-    public IDataFormat.Data? GetData(string format)
+    
+    public LocationWeatherInfo? GetWeatherData(string format)
     {
         try
         {
             XDocument xml = XDocument.Parse(format);
-            IDataFormat.Data data = ValidateData(xml);
+            LocationWeatherInfo data = ValidateWeatherData(xml);
             return data;
         }
         catch (System.Xml.XmlException exception)
@@ -39,6 +40,4 @@ public class XmlFormat : IDataFormat
         }
         return null;
     }
-
-    
 }
