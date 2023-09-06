@@ -26,9 +26,20 @@ public class JsonFormat : IDataFormat
     {
         try
         {
+            Tuple<string, string>[] types =
+            {
+                new Tuple<string, string>("Location", "string"),
+                new Tuple<string, string>("Temperature", "float"),
+                new Tuple<string, string>("Humidity", "float"),
+            };
+            if (!FormatValidator.ValidateJsonFormat(format, types)) return null;
+            
             JsonObject json = JsonObject.Parse(format) as JsonObject;
-            LocationWeatherInfo data = ValidateWeatherData(json);
-            return data;
+            string location = json["Location"].ToString();
+            float temperature = int.Parse(json["Temperature"].ToString());
+            float humidity = int.Parse(json["Humidity"].ToString());
+            return new LocationWeatherInfo(location, temperature, humidity);
+
         }
         catch (System.Text.Json.JsonException exception)
         {
