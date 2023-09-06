@@ -24,31 +24,18 @@ public class JsonFormat : IDataFormat
     
     public LocationWeatherInfo? GetWeatherData(string format)
     {
-        try
+        Tuple<string, string>[] types =
         {
-            Tuple<string, string>[] types =
-            {
-                new Tuple<string, string>("Location", "string"),
-                new Tuple<string, string>("Temperature", "float"),
-                new Tuple<string, string>("Humidity", "float"),
-            };
-            if (!FormatValidator.ValidateJsonFormat(format, types)) return null;
-            
-            JsonObject json = JsonObject.Parse(format) as JsonObject;
-            string location = json["Location"].ToString();
-            float temperature = int.Parse(json["Temperature"].ToString());
-            float humidity = int.Parse(json["Humidity"].ToString());
-            return new LocationWeatherInfo(location, temperature, humidity);
-
-        }
-        catch (System.Text.Json.JsonException exception)
-        {
-            Console.WriteLine("Invalid Json Format");
-        }
-        catch (Exception exception)
-        {
-            Console.WriteLine(exception.Message);
-        }
-        return null;
+            new Tuple<string, string>("Location", "string"),
+            new Tuple<string, string>("Temperature", "float"),
+            new Tuple<string, string>("Humidity", "float"),
+        };
+        if (!FormatValidator.ValidateJsonFormat(format, types)) return null;
+        
+        JsonObject json = JsonObject.Parse(format) as JsonObject;
+        string location = json["Location"].ToString();
+        float temperature = int.Parse(json["Temperature"].ToString());
+        float humidity = int.Parse(json["Humidity"].ToString());
+        return new LocationWeatherInfo(location, temperature, humidity);
     }
 }
