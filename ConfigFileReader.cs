@@ -1,6 +1,5 @@
 ﻿using System.Text.Json;
 namespace RealTimeWeather;
-
 public class BotsConfiguration
 {
     public BotSettings RainBot { get; init; }
@@ -10,15 +9,15 @@ public class BotsConfiguration
 
 public class BotSettings
 {
-    public bool enabled { get; init; }
-    public int? humidityThreshold { get; init; }
-    public int? temperatureThreshold { get; init; }
-    public string message { get; init; }
+    public bool Enabled { get; init; }
+    public int? HumidityThreshold { get; init; }
+    public int? TemperatureThreshold { get; init; }
+    public string Message { get; init; }
 }
 
 public sealed class ConfigFileReader
 {
-    private string _configFilePath = GetConfigPath();
+    private readonly string _configFilePath = GetConfigPath();
     private static ConfigFileReader? _instance;
     private ConfigFileReader()
     {
@@ -41,8 +40,8 @@ public sealed class ConfigFileReader
     {
         try
         {
-            string fileContent = File.ReadAllText(_configFilePath);
-            BotsConfiguration? botsConfiguration = JsonSerializer.Deserialize<BotsConfiguration>(fileContent);
+            var fileContent = File.ReadAllText(_configFilePath);
+            var botsConfiguration = JsonSerializer.Deserialize<BotsConfiguration>(fileContent);
             return botsConfiguration;
         }
         catch (FileNotFoundException e)
@@ -58,7 +57,7 @@ public sealed class ConfigFileReader
 
     private static string GetConfigPath()
     {
-        string parentPath = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.ToString();
+        var parentPath = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.ToString();
         return Path.Combine(parentPath,@"files\configurationDetails.json");
     }
 }

@@ -1,12 +1,10 @@
 ﻿using System.Xml.Linq;
-
 namespace RealTimeWeather;
-
 public class XmlFormatValidator : FormatValidator
 {
     protected override bool ContainsAllKeys(object format, string[] keys)
     {
-        XDocument xml = format as XDocument;
+        var xml = format as XDocument;
         foreach (var key in keys)
         {
             if (xml.Root.Element(key) is null)
@@ -19,7 +17,7 @@ public class XmlFormatValidator : FormatValidator
 
     protected override bool IsValidKeyValues(object format, Tuple<string, string>[] attributes)
     {
-        XDocument xml = format as XDocument;
+        var xml = format as XDocument;
         foreach (var attribute in attributes)
         {
             string attributeType = attribute.Item2.ToLower();
@@ -46,8 +44,8 @@ public class XmlFormatValidator : FormatValidator
     {
         try
         {
-            XDocument xml = XDocument.Parse(format) as XDocument;
-            string[] keys = (from entry in attributes select entry.Item1).ToArray();
+            var xml = XDocument.Parse(format);
+            var keys = (from entry in attributes select entry.Item1).ToArray();
             if(!ContainsAllKeys(xml, keys)) throw new Exception("Xml is missing attributes.");
             if(!IsValidKeyValues(xml, attributes)) throw new Exception("Invalid data types for the given keyss.");
             Console.WriteLine("Xml format is valid for all specified attributes.");

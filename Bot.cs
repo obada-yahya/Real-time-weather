@@ -1,5 +1,4 @@
 ﻿namespace RealTimeWeather;
-
 public abstract class Bot
 {
     protected string Message { get; set; }
