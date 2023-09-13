@@ -2,22 +2,24 @@
 namespace RealTimeWeather;
 public class XmlFormatValidator : FormatValidator
 {
-    protected override bool ContainsAllKeys(object format, string[] keys)
+    protected override List<string> ContainsAllKeys(object format, string[] keys)
     {
         var xml = format as XDocument;
+        var missingKeys = new List<string>();
         foreach (var key in keys)
         {
             if (xml.Root.Element(key) is null)
             {
-                return false;
+                missingKeys.Add(key);
             }
         }
-        return true;
+        return missingKeys;
     }
 
-    protected override bool IsValidKeyValues(object format, Tuple<string, string>[] attributes)
+    protected override List<string> IsValidKeyValues(object format, Tuple<string, string>[] attributes)
     {
         var xml = format as XDocument;
+        List<string> invalidKeys = new List<string>();
         foreach (var attribute in attributes)
         {
             string attributeType = attribute.Item2.ToLower();
@@ -25,19 +27,19 @@ public class XmlFormatValidator : FormatValidator
             {
                 if (!int.TryParse(xml.Root.Element(attribute.Item1).Value, out _))
                 {
-                    return false;
+                    invalidKeys.Add(attribute.Item1);
                 }
             }
             else if (attributeType == "float")
             {
                 if (!float.TryParse(xml.Root.Element(attribute.Item1).Value, out _))
                 {
-                    Console.WriteLine(attribute.Item1);
-                    return false;
+                    
+                    invalidKeys.Add(attribute.Item1);
                 }
             }
         }
-        return true;
+        return invalidKeys;
     }
 
     public override bool ValidateFormat(string format, Tuple<string, string>[] attributes)
@@ -46,8 +48,18 @@ public class XmlFormatValidator : FormatValidator
         {
             var xml = XDocument.Parse(format);
             var keys = (from entry in attributes select entry.Item1).ToArray();
-            if(!ContainsAllKeys(xml, keys)) throw new Exception("Xml is missing attributes.");
-            if(!IsValidKeyValues(xml, attributes)) throw new Exception("Invalid data types for the given keyss.");
+            List<string> missingKeys = ContainsAllKeys(xml, keys);
+            if (missingKeys.Count != 0)
+            {
+                var message = "\n" + string.Join(',', missingKeys);
+                throw new Exception("Xml is missing the following attributes:"+message);
+            }
+            List<string> invalidKeys = IsValidKeyValues(xml, attributes);
+            if (invalidKeys.Count != 0)
+            {
+                var message = "\n" + string.Join(',', invalidKeys);
+                throw new Exception("Invalid data types for the given keys:" + message);
+            }
             Console.WriteLine("Xml format is valid for all specified attributes.");
             return true;
         }
