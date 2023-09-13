@@ -1,16 +1,21 @@
 ﻿namespace RealTimeWeather;
 
-public abstract class Bot
+public abstract class Bot : IObserver
 {
-    protected string Message { get; set; }
+    protected string _message;
+    protected IObservable _weatherObservable;
 
-    protected Bot(string message)
+    protected Bot(string message,IObservable weatherObservable)
     {
-        this.Message = message;
+        this._message = message;
+        this._weatherObservable = weatherObservable;
+        this._weatherObservable.Add(this);
     }
 
     public void PrintWeatherCast()
     {
-        Console.WriteLine($"{this.GetType().Name}: \"{this.Message}\"");
+        Console.WriteLine($"{this.GetType().Name}: \"{this._message}\"");
     }
+
+    public abstract void Update();
 }

@@ -2,8 +2,13 @@
 
 public class SunBot : Bot
 {
-    public SunBot(string message) : base(message)
+    public SunBot(string message,IObservable weatherObservable) : base(message,weatherObservable)
     {
         
+    }
+
+    public override void Update()
+    {
+        PrintWeatherCast();
     }
 }
