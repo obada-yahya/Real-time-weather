@@ -3,13 +3,13 @@
 public abstract class Bot : IObserver
 {
     protected string _message;
-    protected IObservable _weatherObservable;
+    protected WeatherStation _weatherObservable;
 
-    protected Bot(string message,IObservable weatherObservable)
+    protected Bot(string message,WeatherStation weatherStation)
     {
-        this._message = message;
-        this._weatherObservable = weatherObservable;
-        this._weatherObservable.Add(this);
+        _message = message;
+        _weatherObservable = weatherStation;
+        _weatherObservable.Add(this);
     }
 
     public void PrintWeatherCast()

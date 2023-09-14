@@ -2,13 +2,15 @@
 
 public class SunBot : Bot
 {
-    public SunBot(string message,IObservable weatherObservable) : base(message,weatherObservable)
+    private float _temperatureThreshold;
+    public SunBot(float temperatureThreshold, string message, WeatherStation weatherStation) : base(message, weatherStation)
     {
-        
+        _temperatureThreshold = temperatureThreshold;
     }
 
     public override void Update()
     {
-        PrintWeatherCast();
+        if(_weatherObservable.Temperature > _temperatureThreshold)
+            PrintWeatherCast();
     }
 }

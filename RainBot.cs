@@ -2,13 +2,15 @@
 
 public class RainBot : Bot
 {
-    public RainBot(string message,IObservable weatherObservable) : base(message,weatherObservable)
+    private float _humidityThreshold;
+    public RainBot(float humidityThreshold, string message, WeatherStation weatherStation) : base(message, weatherStation)
     {
-        
+        _humidityThreshold = humidityThreshold;
     }
 
     public override void Update()
     {
-        PrintWeatherCast();
+        if(_weatherObservable.Humidity > _humidityThreshold)
+            PrintWeatherCast();
     }
 }

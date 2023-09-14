@@ -2,13 +2,15 @@
 
 public class SnowBot : Bot
 {
-    public SnowBot(string message,IObservable weatherObservable) : base(message,weatherObservable)
+    private float _temperatureThreshold;
+    public SnowBot(float temperatureThreshold, string message, WeatherStation weatherStation) : base(message, weatherStation)
     {
-        
+        _temperatureThreshold = temperatureThreshold;
     }
 
     public override void Update()
     {
-        PrintWeatherCast();
+        if(_weatherObservable.Temperature < _temperatureThreshold)
+            PrintWeatherCast();
     }
 }
