@@ -1,8 +1,5 @@
-﻿using System;
-
-namespace RealTimeWeather
+﻿namespace RealTimeWeather
 {
-    
     public record LocationWeatherInfo(string Location, float Temperature,float Humidity);
     public class Program
     {
