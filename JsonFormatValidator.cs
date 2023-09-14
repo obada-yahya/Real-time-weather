@@ -1,10 +1,12 @@
 ﻿using System.Text.Json.Nodes;
 namespace RealTimeWeather;
+
 public class JsonFormatValidator : FormatValidator
 {
     protected override List<string> ContainsAllKeys(object format, string[] keys)
     {
         var json = format as JsonObject;
+        if (json is null) throw new System.Text.Json.JsonException();
         var missingKeys = new List<string>();
         foreach (var key in keys)
         {
@@ -19,20 +21,21 @@ public class JsonFormatValidator : FormatValidator
     protected override List<string> IsValidKeyValues(object format, Tuple<string, string>[] attributes)
     {
         var json = format as JsonObject;
-        List<string> invalidKeys = new List<string>();
+        if (json is null) throw new System.Text.Json.JsonException();
+        var invalidKeys = new List<string>();
         foreach (var attribute in attributes)
         {
             string attributeType = attribute.Item2.ToLower();
             if (attributeType == "int")
             {
-                if (!int.TryParse(json[attribute.Item1].ToString(), out _))
+                if (!int.TryParse(json[attribute.Item1]?.ToString(), out _))
                 {
                     invalidKeys.Add(attribute.Item1);
                 }
             }
             else if (attributeType == "float")
             {
-                if (!float.TryParse(json[attribute.Item1].ToString(), out _))
+                if (!float.TryParse(json[attribute.Item1]?.ToString(), out _))
                 {
                     invalidKeys.Add(attribute.Item1);
                 }
@@ -45,15 +48,16 @@ public class JsonFormatValidator : FormatValidator
     {
         try
         {
-            var json = JsonObject.Parse(format);
+            var json = JsonNode.Parse(format);
+            if (json is null) throw new System.Text.Json.JsonException();
             var keys = (from entry in attributes select entry.Item1).ToArray();
-            List<string> missingKeys = ContainsAllKeys(json, keys);
+            var missingKeys = ContainsAllKeys(json, keys);
             if (missingKeys.Count != 0)
             {
                 var message = "\n" + string.Join(',', missingKeys);
                 throw new Exception("JSON is missing the following attributes:"+message);
             }
-            List<string> invalidKeys = IsValidKeyValues(json, attributes);
+            var invalidKeys = IsValidKeyValues(json, attributes);
             if (invalidKeys.Count != 0)
             {
                 var message = "\n" + string.Join(',', invalidKeys);

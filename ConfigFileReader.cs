@@ -1,5 +1,6 @@
 ﻿using System.Text.Json;
 namespace RealTimeWeather;
+
 public class BotsConfiguration
 {
     public BotSettings RainBot { get; init; }
@@ -57,7 +58,7 @@ public sealed class ConfigFileReader
 
     private static string GetConfigPath()
     {
-        var parentPath = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.ToString();
+        var parentPath = Directory.GetParent(Directory.GetCurrentDirectory())?.Parent?.Parent?.ToString();
         return Path.Combine(parentPath,@"files\configurationDetails.json");
     }
 }

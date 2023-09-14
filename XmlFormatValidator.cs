@@ -1,10 +1,12 @@
 ﻿using System.Xml.Linq;
 namespace RealTimeWeather;
+
 public class XmlFormatValidator : FormatValidator
 {
     protected override List<string> ContainsAllKeys(object format, string[] keys)
     {
         var xml = format as XDocument;
+        if (xml is null) throw new System.Xml.XmlException();
         var missingKeys = new List<string>();
         foreach (var key in keys)
         {
@@ -19,7 +21,8 @@ public class XmlFormatValidator : FormatValidator
     protected override List<string> IsValidKeyValues(object format, Tuple<string, string>[] attributes)
     {
         var xml = format as XDocument;
-        List<string> invalidKeys = new List<string>();
+        if (xml is null) throw new System.Xml.XmlException();
+        var invalidKeys = new List<string>();
         foreach (var attribute in attributes)
         {
             string attributeType = attribute.Item2.ToLower();
@@ -48,14 +51,14 @@ public class XmlFormatValidator : FormatValidator
         {
             var xml = XDocument.Parse(format);
             var keys = (from entry in attributes select entry.Item1).ToArray();
-            List<string> missingKeys = ContainsAllKeys(xml, keys);
-            if (missingKeys.Count != 0)
+            var missingKeys = ContainsAllKeys(xml, keys);
+            if (missingKeys.Any())
             {
                 var message = "\n" + string.Join(',', missingKeys);
                 throw new Exception("Xml is missing the following attributes:"+message);
             }
-            List<string> invalidKeys = IsValidKeyValues(xml, attributes);
-            if (invalidKeys.Count != 0)
+            var invalidKeys = IsValidKeyValues(xml, attributes);
+            if (invalidKeys.Any())
             {
                 var message = "\n" + string.Join(',', invalidKeys);
                 throw new Exception("Invalid data types for the given keys:" + message);
