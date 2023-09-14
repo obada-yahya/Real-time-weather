@@ -1,4 +1,5 @@
 ﻿using System.Text.Json.Nodes;
+
 namespace RealTimeWeather;
 
 public class JsonFormatValidator : FormatValidator
@@ -6,7 +7,7 @@ public class JsonFormatValidator : FormatValidator
     protected override List<string> ContainsAllKeys(object format, string[] keys)
     {
         var json = format as JsonObject;
-        if (json is null) throw new System.Text.Json.JsonException();
+        if (json is null) throw new System.Text.Json.JsonException("Invalid JSON Format");
         var missingKeys = new List<string>();
         foreach (var key in keys)
         {
@@ -49,7 +50,7 @@ public class JsonFormatValidator : FormatValidator
         try
         {
             var json = JsonNode.Parse(format);
-            if (json is null) throw new System.Text.Json.JsonException();
+            if (json is null) throw new System.Text.Json.JsonException("Invalid JSON Format");
             var keys = (from entry in attributes select entry.Item1).ToArray();
             var missingKeys = ContainsAllKeys(json, keys);
             if (missingKeys.Count != 0)

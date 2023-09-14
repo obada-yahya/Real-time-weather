@@ -1,4 +1,5 @@
 ﻿namespace RealTimeWeather;
+
 public abstract class FormatValidator
 {
     protected abstract List<string> ContainsAllKeys(Object format, string[] keys);

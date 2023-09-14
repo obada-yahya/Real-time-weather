@@ -1,11 +1,12 @@
 ﻿using System.Text.Json.Nodes;
+
 namespace RealTimeWeather;
 
 public class JsonFormat : IDataFormat
 {
     public LocationWeatherInfo? GetLocationWeatherInfo(string format)
     {
-        Tuple<string, string>[] types = KeyTypeUtil.GetWeatherInfoKeys();
+        var types = KeyTypeUtil.GetWeatherInfoKeys();
         var validator = new JsonFormatValidator();
         if (!validator.ValidateFormat(format, types)) return null;
         

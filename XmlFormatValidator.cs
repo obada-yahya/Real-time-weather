@@ -1,4 +1,5 @@
 ﻿using System.Xml.Linq;
+
 namespace RealTimeWeather;
 
 public class XmlFormatValidator : FormatValidator
@@ -6,7 +7,7 @@ public class XmlFormatValidator : FormatValidator
     protected override List<string> ContainsAllKeys(object format, string[] keys)
     {
         var xml = format as XDocument;
-        if (xml is null) throw new System.Xml.XmlException();
+        if (xml is null) throw new System.Xml.XmlException("Invalid Xml Format");
         var missingKeys = new List<string>();
         foreach (var key in keys)
         {
@@ -21,7 +22,7 @@ public class XmlFormatValidator : FormatValidator
     protected override List<string> IsValidKeyValues(object format, Tuple<string, string>[] attributes)
     {
         var xml = format as XDocument;
-        if (xml is null) throw new System.Xml.XmlException();
+        if (xml is null) throw new System.Xml.XmlException("Invalid Xml Format");
         var invalidKeys = new List<string>();
         foreach (var attribute in attributes)
         {
