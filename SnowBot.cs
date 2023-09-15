@@ -1,5 +1,4 @@
 ﻿namespace RealTimeWeather;
-
 public class SnowBot : Bot
 {
     private float _temperatureThreshold;

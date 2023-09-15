@@ -4,51 +4,66 @@ namespace RealTimeWeather;
 
 public class JsonFormatValidator : FormatValidator
 {
-    protected override bool ContainsAllKeys(object format, string[] keys)
+    protected override List<string> ContainsAllKeys(object format, string[] keys)
     {
-        JsonObject json = format as JsonObject;
+        var json = format as JsonObject;
+        if (json is null) throw new System.Text.Json.JsonException("Invalid JSON Format");
+        var missingKeys = new List<string>();
         foreach (var key in keys)
         {
             if (!json.ContainsKey(key))
             {
-                return false;
+                missingKeys.Add(key);
             }
         }
-        return true;
+        return missingKeys;
     }
 
-    protected override bool IsValidKeyValues(object format, Tuple<string, string>[] attributes)
+    protected override List<string> IsValidKeyValues(object format, Tuple<string, string>[] attributes)
     {
-        JsonObject json = format as JsonObject;
+        var json = format as JsonObject;
+        if (json is null) throw new System.Text.Json.JsonException();
+        var invalidKeys = new List<string>();
         foreach (var attribute in attributes)
         {
             string attributeType = attribute.Item2.ToLower();
             if (attributeType == "int")
             {
-                if (!int.TryParse(json[attribute.Item1].ToString(), out _))
+                if (!int.TryParse(json[attribute.Item1]?.ToString(), out _))
                 {
-                    return false;
+                    invalidKeys.Add(attribute.Item1);
                 }
             }
             else if (attributeType == "float")
             {
-                if (!float.TryParse(json[attribute.Item1].ToString(), out _))
+                if (!float.TryParse(json[attribute.Item1]?.ToString(), out _))
                 {
-                    return false;
+                    invalidKeys.Add(attribute.Item1);
                 }
             }
         }
-        return true;
+        return invalidKeys;
     }
 
     public override bool ValidateFormat(string format, Tuple<string, string>[] attributes)
     {
         try
         {
-            JsonObject json = JsonObject.Parse(format) as JsonObject;
-            string[] keys = (from entry in attributes select entry.Item1).ToArray();
-            if(!ContainsAllKeys(json, keys)) throw new Exception("JSON is missing attributes.");
-            if(!IsValidKeyValues(json, attributes)) throw new Exception("Invalid data types for the given keys.");
+            var json = JsonNode.Parse(format);
+            if (json is null) throw new System.Text.Json.JsonException("Invalid JSON Format");
+            var keys = (from entry in attributes select entry.Item1).ToArray();
+            var missingKeys = ContainsAllKeys(json, keys);
+            if (missingKeys.Count != 0)
+            {
+                var message = "\n" + string.Join(',', missingKeys);
+                throw new Exception("JSON is missing the following attributes:"+message);
+            }
+            var invalidKeys = IsValidKeyValues(json, attributes);
+            if (invalidKeys.Count != 0)
+            {
+                var message = "\n" + string.Join(',', invalidKeys);
+                throw new Exception("Invalid data types for the given keys:" + message);
+            }
             Console.WriteLine("JSON format is valid for all specified attributes.");
             return true;
         }

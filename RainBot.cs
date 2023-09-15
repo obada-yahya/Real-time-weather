@@ -1,5 +1,4 @@
 ﻿namespace RealTimeWeather;
-
 public class RainBot : Bot
 {
     private float _humidityThreshold;
