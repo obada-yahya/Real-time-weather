@@ -1,15 +1,12 @@
-﻿namespace RealTimeWeather;
+﻿namespace Real_time_weather;
 
-public abstract class Bot : IObserver
+public abstract class Bot : IObserver<LocationWeatherInfo>
 {
-    protected string _message;
-    protected WeatherStation _weatherObservable;
+    private readonly string _message;
 
-    protected Bot(string message,WeatherStation weatherStation)
+    protected Bot(string message)
     {
         _message = message;
-        _weatherObservable = weatherStation;
-        _weatherObservable.Add(this);
     }
 
     public void PrintWeatherCast()
@@ -17,5 +14,5 @@ public abstract class Bot : IObserver
         Console.WriteLine($"{this.GetType().Name}: \"{this._message}\"");
     }
 
-    public abstract void Update();
+    public abstract void Update(LocationWeatherInfo data);
 }

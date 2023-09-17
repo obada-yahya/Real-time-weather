@@ -1,8 +1,8 @@
-﻿namespace RealTimeWeather;
+﻿namespace Real_time_weather;
 
 public class WeatherStation : IObservable
 {
-    private List<IObserver> _subscribers;
+    private readonly List<IObserver<LocationWeatherInfo>> _subscribers;
     private string _location;
     private float _temperature;
     private float _humidity;
@@ -11,10 +11,7 @@ public class WeatherStation : IObservable
     {
         get => _location;
         
-        set
-        {
-            _location = value;
-        }
+        set => _location = value;
     }
     public float Temperature
     {
@@ -25,29 +22,39 @@ public class WeatherStation : IObservable
             Notify();
         }
     }
-    public float Humidity => _humidity;
+
+    public float Humidity
+    {
+        get => _humidity;
+        set
+        {
+            _humidity = value;
+            Notify();
+        }
+    }
 
     public WeatherStation(LocationWeatherInfo weatherInfo)
     {
-        _subscribers = new List<IObserver>();
+        _subscribers = new List<IObserver<LocationWeatherInfo>>();
         _location = weatherInfo.Location;
         _temperature = weatherInfo.Temperature;
         _humidity = weatherInfo.Humidity;
     }
-    public void Add(IObserver subscriber)
+    public void Add(IObserver<LocationWeatherInfo> subscriber)
     {
         _subscribers.Add(subscriber);
     }
 
-    public void Remove(IObserver subscriber)
+    public void Remove(IObserver<LocationWeatherInfo> subscriber)
     {
         _subscribers.Remove(subscriber);
     }
     public void Notify()
     {
+        var data = new LocationWeatherInfo(_location, _temperature, _humidity);
         foreach (var subscriber in _subscribers)
         {
-            subscriber.Update();
+            subscriber.Update(data);
         }
     }
 }
