@@ -21,6 +21,7 @@ public sealed class ConfigFileReader
 {
     private readonly string _configFilePath = GetConfigPath();
     private static ConfigFileReader? _instance;
+    
     private ConfigFileReader()
     {
         

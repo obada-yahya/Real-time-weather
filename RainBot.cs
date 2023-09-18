@@ -2,6 +2,7 @@
 public class RainBot : Bot
 {
     private readonly float _humidityThreshold;
+    
     public RainBot(float humidityThreshold, string message) : base(message)
     {
         _humidityThreshold = humidityThreshold;

@@ -3,6 +3,7 @@
 public class SunBot : Bot
 {
     private readonly float _temperatureThreshold;
+    
     public SunBot(float temperatureThreshold, string message) : base(message)
     {
         _temperatureThreshold = temperatureThreshold;

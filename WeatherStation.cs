@@ -13,6 +13,7 @@ public class WeatherStation : IObservable
         
         set => _location = value;
     }
+    
     public float Temperature
     {
         get => _temperature;
@@ -40,6 +41,7 @@ public class WeatherStation : IObservable
         _temperature = weatherInfo.Temperature;
         _humidity = weatherInfo.Humidity;
     }
+    
     public void Add(IObserver<LocationWeatherInfo> subscriber)
     {
         _subscribers.Add(subscriber);
@@ -49,6 +51,7 @@ public class WeatherStation : IObservable
     {
         _subscribers.Remove(subscriber);
     }
+    
     public void Notify()
     {
         var data = new LocationWeatherInfo(_location, _temperature, _humidity);

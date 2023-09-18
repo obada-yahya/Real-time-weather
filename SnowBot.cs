@@ -2,6 +2,7 @@
 public class SnowBot : Bot
 {
     private readonly float _temperatureThreshold;
+    
     public SnowBot(float temperatureThreshold, string message) : base(message)
     {
         _temperatureThreshold = temperatureThreshold;
