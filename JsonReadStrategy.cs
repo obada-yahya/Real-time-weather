@@ -2,7 +2,7 @@
 
 namespace RealTimeWeather;
 
-public class JsonFormat : IDataFormat
+public class JsonReadStrategy : IReadStrategy
 {
     public LocationWeatherInfo? GetLocationWeatherInfo(string format)
     {

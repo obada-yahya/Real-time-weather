@@ -1,6 +1,6 @@
 ﻿namespace RealTimeWeather;
 
-public interface IDataFormat
+public interface IReadStrategy
 {
     public LocationWeatherInfo? GetLocationWeatherInfo(string format);
 }

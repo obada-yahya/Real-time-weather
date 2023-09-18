@@ -2,7 +2,7 @@
 
 namespace RealTimeWeather;
 
-public class XmlFormat : IDataFormat
+public class XmlReadStrategy : IReadStrategy
 {
     public LocationWeatherInfo? GetLocationWeatherInfo(string format)
     {
