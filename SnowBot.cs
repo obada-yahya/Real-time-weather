@@ -1,8 +1,16 @@
-﻿namespace RealTimeWeather;
+﻿namespace Real_time_weather;
 public class SnowBot : Bot
 {
-    public SnowBot(string message) : base(message)
+    private readonly float _temperatureThreshold;
+    
+    public SnowBot(float temperatureThreshold, string message) : base(message)
     {
-        
+        _temperatureThreshold = temperatureThreshold;
+    }
+
+    public override void Update(LocationWeatherInfo weatherData)
+    {
+        if(weatherData.Temperature < _temperatureThreshold)
+            PrintWeatherCast();
     }
 }

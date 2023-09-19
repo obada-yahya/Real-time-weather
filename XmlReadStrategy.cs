@@ -1,5 +1,4 @@
 ﻿using System.Xml.Linq;
-using RealTimeWeather;
 
 namespace Real_time_weather;
 
@@ -13,7 +12,7 @@ public class XmlReadStrategy : IReadStrategy
         
         var xml = XDocument.Parse(format);
         var location = xml.Root.Element("Location").ToString();
-        var temperature = int.Parse(xml.Root.Element("Temperature").Value);
+        var temperature = int.Parse(xml.Root.Element("Temperature")?.Value);
         var humidity = int.Parse(xml.Root.Element("Humidity").Value);
         return new LocationWeatherInfo(location, temperature, humidity);
     }

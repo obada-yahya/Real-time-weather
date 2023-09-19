@@ -1,5 +1,4 @@
 ﻿using System.Text.Json.Nodes;
-using RealTimeWeather;
 
 namespace Real_time_weather;
 

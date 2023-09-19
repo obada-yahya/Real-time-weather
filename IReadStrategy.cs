@@ -1,6 +1,4 @@
-﻿using RealTimeWeather;
-
-namespace Real_time_weather;
+﻿namespace Real_time_weather;
 
 public interface IReadStrategy
 {
