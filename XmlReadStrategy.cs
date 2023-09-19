@@ -2,7 +2,7 @@
 
 namespace Real_time_weather;
 
-public class XmlFormat : IDataFormat
+public class XmlReadStrategy : IReadStrategy
 {
     public LocationWeatherInfo? GetLocationWeatherInfo(string format)
     {
@@ -15,5 +15,18 @@ public class XmlFormat : IDataFormat
         var temperature = int.Parse(xml.Root.Element("Temperature")?.Value);
         var humidity = int.Parse(xml.Root.Element("Humidity").Value);
         return new LocationWeatherInfo(location, temperature, humidity);
+    }
+
+    public bool IsValidFormat(string format)
+    {
+        try
+        {
+            var xml = XDocument.Parse(format);
+            return true;
+        }
+        catch (Exception e)
+        {
+            return false;
+        }
     }
 }

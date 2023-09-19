@@ -2,7 +2,7 @@
 
 namespace Real_time_weather;
 
-public class JsonFormat : IDataFormat
+public class JsonReadStrategy : IReadStrategy
 {
     public LocationWeatherInfo? GetLocationWeatherInfo(string format)
     {
@@ -15,5 +15,18 @@ public class JsonFormat : IDataFormat
         var temperature = float.Parse(json["Temperature"].ToString());
         var humidity = int.Parse(json["Humidity"].ToString());
         return new LocationWeatherInfo(location, temperature, humidity);
+    }
+
+    public bool IsValidFormat(string format)
+    {
+        try
+        {
+            var json = JsonNode.Parse(format);
+            return true;
+        }
+        catch (Exception e)
+        {
+            return false;
+        }
     }
 }
