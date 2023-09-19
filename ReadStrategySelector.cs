@@ -12,6 +12,6 @@ public class ReadStrategySelector
                 return strategy;
             }
         }
-        throw new Exception("No Such Data Format exist in the system.");
+        throw new Exception("Not Supported File Format.");
     }
 }
