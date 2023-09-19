@@ -1,6 +1,6 @@
 ﻿using System.Xml.Linq;
 
-namespace RealTimeWeather;
+namespace Real_time_weather;
 
 public class XmlFormat : IDataFormat
 {
@@ -12,7 +12,7 @@ public class XmlFormat : IDataFormat
         
         var xml = XDocument.Parse(format);
         var location = xml.Root.Element("Location").ToString();
-        var temperature = int.Parse(xml.Root.Element("Temperature").Value);
+        var temperature = int.Parse(xml.Root.Element("Temperature")?.Value);
         var humidity = int.Parse(xml.Root.Element("Humidity").Value);
         return new LocationWeatherInfo(location, temperature, humidity);
     }

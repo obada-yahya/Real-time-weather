@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Nodes;
 
-namespace RealTimeWeather;
+namespace Real_time_weather;
 
 public class JsonFormat : IDataFormat
 {

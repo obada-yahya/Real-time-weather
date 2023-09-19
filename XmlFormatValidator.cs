@@ -1,6 +1,6 @@
 ﻿using System.Xml.Linq;
 
-namespace RealTimeWeather;
+namespace Real_time_weather;
 
 public class XmlFormatValidator : FormatValidator
 {
@@ -8,15 +8,8 @@ public class XmlFormatValidator : FormatValidator
     {
         var xml = format as XDocument;
         if (xml is null) throw new System.Xml.XmlException("Invalid Xml Format");
-        var missingKeys = new List<string>();
-        foreach (var key in keys)
-        {
-            if (xml.Root.Element(key) is null)
-            {
-                missingKeys.Add(key);
-            }
-        }
-        return missingKeys;
+        var missingKeys = (from key in keys where xml.Root.Element(key) is null select key);
+        return missingKeys.ToList();
     }
 
     protected override List<string> IsValidKeyValues(object format, Tuple<string, string>[] attributes)
@@ -29,14 +22,14 @@ public class XmlFormatValidator : FormatValidator
             string attributeType = attribute.Item2.ToLower();
             if (attributeType == "int")
             {
-                if (!int.TryParse(xml.Root.Element(attribute.Item1).Value, out _))
+                if (!int.TryParse(xml.Root?.Element(attribute.Item1)?.Value, out _))
                 {
                     invalidKeys.Add(attribute.Item1);
                 }
             }
             else if (attributeType == "float")
             {
-                if (!float.TryParse(xml.Root.Element(attribute.Item1).Value, out _))
+                if (!float.TryParse(xml.Root?.Element(attribute.Item1)?.Value, out _))
                 {
                     
                     invalidKeys.Add(attribute.Item1);
@@ -67,7 +60,7 @@ public class XmlFormatValidator : FormatValidator
             Console.WriteLine("Xml format is valid for all specified attributes.");
             return true;
         }
-        catch (System.Xml.XmlException exception)
+        catch (System.Xml.XmlException)
         {
             Console.WriteLine("Invalid Xml Format");
         }

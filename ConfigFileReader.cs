@@ -1,6 +1,6 @@
 ﻿using System.Text.Json;
 
-namespace RealTimeWeather;
+namespace Real_time_weather;
 
 public class BotsConfiguration
 {
@@ -14,13 +14,14 @@ public class BotSettings
     public bool Enabled { get; init; }
     public int? HumidityThreshold { get; init; }
     public int? TemperatureThreshold { get; init; }
-    public string Message { get; init; }
+    public string? Message { get; init; }
 }
 
 public sealed class ConfigFileReader
 {
     private readonly string _configFilePath = GetConfigPath();
     private static ConfigFileReader? _instance;
+    
     private ConfigFileReader()
     {
         
@@ -60,6 +61,7 @@ public sealed class ConfigFileReader
     private static string GetConfigPath()
     {
         var parentPath = Directory.GetParent(Directory.GetCurrentDirectory())?.Parent?.Parent?.ToString();
+        if (parentPath == null) throw new Exception("Invalid File Path");
         return Path.Combine(parentPath, @"files\configurationDetails.json");
     }
 }
