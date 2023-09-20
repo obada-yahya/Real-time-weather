@@ -6,7 +6,13 @@
         <RootNamespace>Real_time_weather</RootNamespace>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+
+
+
+
     </PropertyGroup>
+
+
 
 
 </Project>
