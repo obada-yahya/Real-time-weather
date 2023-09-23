@@ -1,9 +1,8 @@
 ﻿using System.Text.Json;
-using BotsConfiguration = Real_time_weather.Utils.BotsConfiguration;
 
 namespace Real_time_weather.Utils;
 
-public sealed class ConfigFileReader
+public sealed class ConfigFileReader : IFileWeatherReader
 {
     private readonly string _configFilePath = GetConfigPath();
     private static ConfigFileReader? _instance;
@@ -50,4 +49,5 @@ public sealed class ConfigFileReader
         if (parentPath == null) throw new Exception("Invalid File Path");
         return Path.Combine(parentPath, @"files\configurationDetails.json");
     }
+    
 }
