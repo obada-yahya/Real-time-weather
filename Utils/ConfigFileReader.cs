@@ -1,21 +1,7 @@
 ﻿using System.Text.Json;
+using BotsConfiguration = Real_time_weather.Utils.BotsConfiguration;
 
-namespace Real_time_weather;
-
-public class BotsConfiguration
-{
-    public BotSettings RainBot { get; init; }
-    public BotSettings SunBot { get; init; }
-    public BotSettings SnowBot { get; init; }
-}
-
-public class BotSettings
-{
-    public bool Enabled { get; init; }
-    public int? HumidityThreshold { get; init; }
-    public int? TemperatureThreshold { get; init; }
-    public string? Message { get; init; }
-}
+namespace Real_time_weather.Utils;
 
 public sealed class ConfigFileReader
 {
@@ -27,7 +13,7 @@ public sealed class ConfigFileReader
         
     }
     
-    public static ConfigFileReader? Instance
+    public static ConfigFileReader Instance
     {
         get
         {
@@ -47,7 +33,7 @@ public sealed class ConfigFileReader
             var botsConfiguration = JsonSerializer.Deserialize<BotsConfiguration>(fileContent);
             return botsConfiguration;
         }
-        catch (FileNotFoundException e)
+        catch (FileNotFoundException)
         {
             Console.WriteLine("File Not Found Exception");
         }
