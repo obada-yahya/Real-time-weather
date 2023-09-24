@@ -1,23 +1,8 @@
 ﻿using System.Text.Json;
 
-namespace Real_time_weather;
+namespace Real_time_weather.Utils;
 
-public class BotsConfiguration
-{
-    public BotSettings RainBot { get; init; }
-    public BotSettings SunBot { get; init; }
-    public BotSettings SnowBot { get; init; }
-}
-
-public class BotSettings
-{
-    public bool Enabled { get; init; }
-    public int? HumidityThreshold { get; init; }
-    public int? TemperatureThreshold { get; init; }
-    public string? Message { get; init; }
-}
-
-public sealed class ConfigFileReader
+public sealed class ConfigFileReader : IFileWeatherReader
 {
     private readonly string _configFilePath = GetConfigPath();
     private static ConfigFileReader? _instance;
@@ -27,7 +12,7 @@ public sealed class ConfigFileReader
         
     }
     
-    public static ConfigFileReader? Instance
+    public static ConfigFileReader Instance
     {
         get
         {
@@ -47,7 +32,7 @@ public sealed class ConfigFileReader
             var botsConfiguration = JsonSerializer.Deserialize<BotsConfiguration>(fileContent);
             return botsConfiguration;
         }
-        catch (FileNotFoundException e)
+        catch (FileNotFoundException)
         {
             Console.WriteLine("File Not Found Exception");
         }
@@ -64,4 +49,5 @@ public sealed class ConfigFileReader
         if (parentPath == null) throw new Exception("Invalid File Path");
         return Path.Combine(parentPath, @"files\configurationDetails.json");
     }
+    
 }
