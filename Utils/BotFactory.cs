@@ -7,15 +7,15 @@ public class BotFactory
         var botName = name.ToLower();
         var message = botSettings.Message;
         Bot? bot = null;
-        if (botName == "rainbot")
+        if (botName.Equals("rainbot"))
         {
             bot = new RainBot(botSettings.HumidityThreshold,message);
         }
-        else if (botName == "snowbot")
+        else if (botName.Equals("snowbot"))
         {
             bot = new SnowBot(botSettings.TemperatureThreshold, message);
         }
-        else if (botName == "sunbot")
+        else if (botName.Equals("sunbot"))
         {
             bot = new SunBot(botSettings.TemperatureThreshold, message);
         }
