@@ -14,5 +14,10 @@ public abstract class Bot : IObserver<LocationWeatherInfo>
         Console.WriteLine($"{this.GetType().Name}: \"{this._message}\"");
     }
 
+    public override string ToString()
+    {
+        return $"{this.GetType().Name}";
+    }
+    
     public abstract void Update(LocationWeatherInfo data);
 }
