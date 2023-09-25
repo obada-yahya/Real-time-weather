@@ -9,7 +9,11 @@ namespace Real_time_weather
         {
             var botManager = new BotManager(ConfigFileReader.Instance);
             var enabledBots = botManager.GetActiveBots();
-            WeatherStation? weatherStation = null;
+            var weatherStation = new WeatherStation(new LocationWeatherInfo("N/A",-1000,-1000));
+            foreach (var bot in enabledBots)
+            {
+                weatherStation.Add(bot);
+            }
             while (true)
             {
                 UserInteractionService.DisplayMenu();
@@ -24,7 +28,8 @@ namespace Real_time_weather
                 }
                 else if (userChoice == 3)
                 {
-                    UserInteractionService.UpdateWeatherData(weatherStation);
+                    if(weatherStation.Location.Equals("N/A"))Console.WriteLine("Doesn't Exist Weather Data To Update.");
+                    else UserInteractionService.UpdateWeatherData(ref weatherStation);
                 }
                 else if(userChoice == 4)
                 {

@@ -21,20 +21,50 @@ public static class UserInteractionService
         Console.WriteLine("******************************");
     }
 
-    public static void UpdateWeatherData(WeatherStation weatherStation)
+    private static float? UpdateFloatAttribute(string attributeName)
     {
-        try
+        Console.WriteLine($"Enter The New {attributeName}.");
+        if (float.TryParse(Console.ReadLine(), out var value))
         {
-            if (weatherStation is null) throw new ArgumentNullException("Weather Data Doesn't Exists.");
-            UpdateWeatherDataMenu();
-            
+            return value;
         }
-        catch (ArgumentNullException exception)
+        Console.WriteLine($"Invalid Value For {attributeName}.");
+        return null;
+    }
+    
+    public static void UpdateWeatherData(ref WeatherStation weatherStation)
+    {
+        float? temperature = null;
+        float? humidity = null;
+        while(true)
         {
-            Console.WriteLine(exception.Message);
+            UpdateWeatherDataMenu();
+            int.TryParse(Console.ReadLine(), out var userChoice);
+            if (userChoice == 1)
+            {
+                temperature = UpdateFloatAttribute("Temperature") ?? temperature;
+            }
+            else if (userChoice == 2)
+            {
+                humidity = UpdateFloatAttribute("Humidity") ?? humidity;
+                Console.WriteLine($"Fuck ${humidity}");
+            }
+            else if (userChoice == 3)
+            {
+                var location = weatherStation.Location;
+                var newHumidity = humidity ?? weatherStation.Humidity;
+                var newTemperature = temperature ?? weatherStation.Temperature;
+                var weatherInfo = new LocationWeatherInfo(location, newHumidity, newTemperature);
+                weatherStation.UpdateWholeWeatherData(weatherInfo);
+                break;
+            }
+            else
+            {
+                Console.WriteLine("Try To Enter Valid Choice.");
+            }
         }
     }
-    public static void EnterWeatherData(ref WeatherStation? weatherStation)
+    public static void EnterWeatherData(ref WeatherStation weatherStation)
     {
         try
         {
@@ -47,8 +77,7 @@ public static class UserInteractionService
             var weatherInfo = dataFormat.GetLocationWeatherInfo(format);
             
             if(weatherInfo is null) throw new Exception("Null Value For Weather Info");
-            if (weatherStation is null) weatherStation = new WeatherStation(weatherInfo);
-            else weatherStation.UpdateWholeWeatherData(weatherInfo);
+            weatherStation.UpdateWholeWeatherData(weatherInfo);
 
         }
         catch (Exception e)
@@ -59,9 +88,10 @@ public static class UserInteractionService
 
     public static void PrintEnabledBots(List<Bot> enabledBots)
     {
+        Console.WriteLine("Available Bots:");
         foreach (var enabledBot in enabledBots)
         {
-            Console.WriteLine(enabledBot);
+            Console.WriteLine("** "+ enabledBot);
         }
     }
 }
