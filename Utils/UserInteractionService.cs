@@ -47,7 +47,6 @@ public static class UserInteractionService
             else if (userChoice == 2)
             {
                 humidity = UpdateFloatAttribute("Humidity") ?? humidity;
-                Console.WriteLine($"Fuck ${humidity}");
             }
             else if (userChoice == 3)
             {
@@ -64,11 +63,24 @@ public static class UserInteractionService
             }
         }
     }
+
+    private static List<string> GetAvailableFormats()
+    {
+        var strategies = ReadStrategiesProvider.GetReadStrategies();
+        List<string> formats = new List<string>();
+        foreach (var strategy in strategies)
+        {
+            formats.Add(strategy.GetType().Name.Split("Read")[0]);
+        }
+        return formats;
+    }
+    
     public static void EnterWeatherData(ref WeatherStation weatherStation)
     {
         try
         {
-            Console.WriteLine("Enter Data In The Any Of The Given Formats (json, xml)");
+            var availableFormats = GetAvailableFormats();
+            Console.WriteLine($"Enter Data In The Any Of The Given Formats ({String.Join(", ",availableFormats)})");
             var format = Console.ReadLine();
             if (format is null) throw new Exception("Null Value For Data Format");
             
