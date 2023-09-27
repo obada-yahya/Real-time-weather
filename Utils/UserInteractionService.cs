@@ -2,25 +2,6 @@
 
 public static class UserInteractionService
 {
-    public static void DisplayMenu()
-    {
-        Console.WriteLine("******************************");
-        Console.WriteLine("1.Enter Weather Data."+
-                          "\n2.Print Enabled Bots."+
-                          "\n3.Update Current Weather Data."+
-                          "\n4.Quit Program.");
-        Console.WriteLine("******************************");
-    }
-
-    public static void UpdateWeatherDataMenu()
-    {
-        Console.WriteLine("******************************");
-        Console.WriteLine("1.Change Temperature."+
-                          "\n2.Change Humidity."+
-                          "\n3.Quit Update Menu.");
-        Console.WriteLine("******************************");
-    }
-
     private static float? UpdateFloatAttribute(string attributeName)
     {
         Console.WriteLine($"Enter The New {attributeName}.");
@@ -38,7 +19,7 @@ public static class UserInteractionService
         float? humidity = null;
         while(true)
         {
-            UpdateWeatherDataMenu();
+            UserInteractionUI.UpdateWeatherDataMenu();
             int.TryParse(Console.ReadLine(), out var userChoice);
             if (userChoice == 1)
             {
@@ -80,7 +61,7 @@ public static class UserInteractionService
         try
         {
             var availableFormats = GetAvailableFormats();
-            Console.WriteLine($"Enter Data In The Any Of The Given Formats ({String.Join(", ",availableFormats)})");
+            Console.WriteLine($"Enter Data In The Any Of The Given Formats ({string.Join(", ",availableFormats)})");
             var format = Console.ReadLine();
             if (format is null) throw new Exception("Null Value For Data Format");
             
@@ -98,12 +79,22 @@ public static class UserInteractionService
         }
     }
 
-    public static void PrintEnabledBots(List<Bot> enabledBots)
+    public static List<Bot> GetEnabledBots()
     {
-        Console.WriteLine("Available Bots:");
-        foreach (var enabledBot in enabledBots)
+        var botManager = new BotManager(ConfigFileReader.Instance);
+        return botManager.GetActiveBots();
+    }
+
+    public static  WeatherStation ConfigWeatherStation(List<Bot> enabledBots)
+    {
+        const string defaultLocation = "N/A";
+        const float defaultTemperature = -1000;
+        const float defaultHumidity = -1000;
+        var weatherStation = new WeatherStation(new LocationWeatherInfo(defaultLocation, defaultTemperature,defaultHumidity));
+        foreach (var bot in enabledBots)
         {
-            Console.WriteLine("** "+ enabledBot);
+            weatherStation.Add(bot);
         }
+        return weatherStation;
     }
 }
