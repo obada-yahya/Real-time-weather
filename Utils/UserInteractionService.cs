@@ -1,46 +1,76 @@
 ﻿namespace Real_time_weather.Utils;
 
+public enum UserChoice
+{
+    ChangeTemperature = 1,
+    ChangeHumidity,
+    QuitUpdateMenu,
+    Invalid,
+}
+
 public static class UserInteractionService
 {
     private static float? UpdateFloatAttribute(string attributeName)
     {
         Console.WriteLine($"Enter The New {attributeName}.");
-        if (float.TryParse(Console.ReadLine(), out var value))
-        {
-            return value;
-        }
+        if (float.TryParse(Console.ReadLine(), out var value)) return value;
         Console.WriteLine($"Invalid Value For {attributeName}.");
         return null;
     }
     
-    public static void UpdateWeatherData(ref WeatherStation weatherStation)
+    private static UserChoice GetUserChoice()
+    {
+        try
+        {
+            var userChoice = string.Join("", Console.ReadLine()!.Split(" "));
+            var isInt = int.TryParse(userChoice, out var x);
+            if(isInt && (x <= 0 || x >= Enum.GetNames(typeof(UserChoice)).Length))
+                throw new InvalidOperationException("Numeric Value Out Of Bound.");
+            if (Enum.TryParse(userChoice, out UserChoice choice)) return choice;
+        }
+        catch (InvalidOperationException exception)
+        {
+            Console.WriteLine(exception.Message);
+        }
+        catch (Exception)
+        {
+            Console.WriteLine("Error Occured while Reading Input.");
+        }
+        return UserChoice.Invalid;
+    }
+
+    private static void ChangeWeatherData(WeatherStation weatherStation, float? temperature, float? humidity)
+    {
+        var location = weatherStation.Location;
+        var newTemperature = temperature ?? weatherStation.Temperature;
+        var newHumidity = humidity ?? weatherStation.Humidity;
+        var weatherInfo = new LocationWeatherInfo(location, newTemperature, newHumidity);
+        weatherStation.UpdateWholeWeatherData(weatherInfo);
+    }
+    
+    public static void UpdateWeatherData(WeatherStation weatherStation)
     {
         float? temperature = null;
         float? humidity = null;
+        
         while(true)
         {
             UserInteractionUI.UpdateWeatherDataMenu();
-            int.TryParse(Console.ReadLine(), out var userChoice);
-            if (userChoice == 1)
+            switch (GetUserChoice())
             {
-                temperature = UpdateFloatAttribute("Temperature") ?? temperature;
-            }
-            else if (userChoice == 2)
-            {
-                humidity = UpdateFloatAttribute("Humidity") ?? humidity;
-            }
-            else if (userChoice == 3)
-            {
-                var location = weatherStation.Location;
-                var newHumidity = humidity ?? weatherStation.Humidity;
-                var newTemperature = temperature ?? weatherStation.Temperature;
-                var weatherInfo = new LocationWeatherInfo(location, newHumidity, newTemperature);
-                weatherStation.UpdateWholeWeatherData(weatherInfo);
-                break;
-            }
-            else
-            {
-                Console.WriteLine("Try To Enter Valid Choice.");
+                case UserChoice.ChangeTemperature:
+                    temperature = UpdateFloatAttribute("Temperature") ?? temperature;
+                    break;
+                case UserChoice.ChangeHumidity:
+                    humidity = UpdateFloatAttribute("Humidity") ?? humidity;
+                    break;
+                case UserChoice.QuitUpdateMenu:
+                    ChangeWeatherData(weatherStation, temperature, humidity);
+                    return;
+                default:
+                case UserChoice.Invalid:
+                    Console.WriteLine("Try To Enter Valid Choice.");
+                    break;
             }
         }
     }
@@ -48,15 +78,10 @@ public static class UserInteractionService
     private static List<string> GetAvailableFormats()
     {
         var strategies = ReadStrategiesProvider.GetReadStrategies();
-        List<string> formats = new List<string>();
-        foreach (var strategy in strategies)
-        {
-            formats.Add(strategy.GetType().Name.Split("Read")[0]);
-        }
-        return formats;
+        return (from format in strategies select format.GetType().Name.Split("Read")[0]).ToList();
     }
     
-    public static void EnterWeatherData(ref WeatherStation weatherStation)
+    public static void EnterWeatherData(WeatherStation weatherStation)
     {
         try
         {
@@ -71,7 +96,6 @@ public static class UserInteractionService
             
             if(weatherInfo is null) throw new Exception("Null Value For Weather Info");
             weatherStation.UpdateWholeWeatherData(weatherInfo);
-
         }
         catch (Exception e)
         {
@@ -81,20 +105,26 @@ public static class UserInteractionService
 
     public static List<Bot> GetEnabledBots()
     {
-        var botManager = new BotManager(ConfigFileReader.Instance);
-        return botManager.GetActiveBots();
+        try
+        {
+            var botManager = new BotManager(ConfigFileReader.Instance);
+            return botManager.GetActiveBots();
+        }
+        catch (Exception)
+        {
+            Console.WriteLine("Failed To Retrieve Active Bots.");
+            return new List<Bot>();
+        }
+
     }
 
-    public static  WeatherStation ConfigWeatherStation(List<Bot> enabledBots)
+    public static WeatherStation ConfigWeatherStation(List<Bot> enabledBots)
     {
         const string defaultLocation = "N/A";
         const float defaultTemperature = -1000;
         const float defaultHumidity = -1000;
         var weatherStation = new WeatherStation(new LocationWeatherInfo(defaultLocation, defaultTemperature,defaultHumidity));
-        foreach (var bot in enabledBots)
-        {
-            weatherStation.Add(bot);
-        }
+        foreach (var bot in enabledBots) weatherStation.Add(bot);
         return weatherStation;
     }
 }
