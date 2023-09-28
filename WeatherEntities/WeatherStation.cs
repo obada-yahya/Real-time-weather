@@ -34,12 +34,18 @@ public class WeatherStation : IObservable
         }
     }
 
-    public WeatherStation(LocationWeatherInfo weatherInfo)
+    public void UpdateWholeWeatherData(LocationWeatherInfo weatherInfo)
     {
-        _subscribers = new List<IObserver<LocationWeatherInfo>>();
         _location = weatherInfo.Location;
         _temperature = weatherInfo.Temperature;
         _humidity = weatherInfo.Humidity;
+        Notify();
+    }
+    
+    public WeatherStation(LocationWeatherInfo weatherInfo)
+    {
+        _subscribers = new List<IObserver<LocationWeatherInfo>>();
+        UpdateWholeWeatherData(weatherInfo);
     }
     
     public void Add(IObserver<LocationWeatherInfo> subscriber)
