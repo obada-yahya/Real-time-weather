@@ -1,4 +1,4 @@
-﻿namespace Real_time_weather;
+﻿namespace Real_time_weather.Validators;
 
 public abstract class FormatValidator
 {

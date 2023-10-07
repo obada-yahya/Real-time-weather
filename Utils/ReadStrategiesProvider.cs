@@ -1,4 +1,6 @@
-﻿namespace Real_time_weather;
+﻿using Real_time_weather.DataFormats;
+
+namespace Real_time_weather;
 
 public static class ReadStrategiesProvider
 {

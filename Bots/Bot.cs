@@ -1,6 +1,6 @@
-﻿namespace Real_time_weather;
+﻿namespace Real_time_weather.Bots;
 
-public abstract class Bot : IObserver<LocationWeatherInfo>
+public abstract class Bot : ObserverPattern.IObserver<LocationWeatherInfo>
 {
     private readonly string _message;
 

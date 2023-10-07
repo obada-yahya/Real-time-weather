@@ -1,4 +1,8 @@
-﻿namespace Real_time_weather.Utils;
+﻿using Real_time_weather.Bots;
+using Real_time_weather.DataFormats;
+using Real_time_weather.WeatherEntities;
+
+namespace Real_time_weather.Utils;
 
 public enum UserChoice
 {

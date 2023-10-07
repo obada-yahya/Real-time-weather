@@ -1,10 +1,10 @@
-﻿namespace Real_time_weather;
+﻿namespace Real_time_weather.DataFormats;
 
 public class DataFormat
 {
-    private IReadStrategy _readBehavior;
+    private IReadStrategy? _readBehavior;
 
-    public DataFormat(IReadStrategy readBehavior)
+    public DataFormat(IReadStrategy? readBehavior)
     {
         _readBehavior = readBehavior;
     }
