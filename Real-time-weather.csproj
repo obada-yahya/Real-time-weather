@@ -8,5 +8,17 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <Compile Remove="RealTimeWeatherTests\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Remove="RealTimeWeatherTests\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="RealTimeWeatherTests\**" />
+    </ItemGroup>
+
 
 </Project>
