@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Nodes;
 
-namespace Real_time_weather;
+namespace Real_time_weather.Validators;
 
 public class JsonFormatValidator : FormatValidator
 {

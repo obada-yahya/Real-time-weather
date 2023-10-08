@@ -1,6 +1,6 @@
 ﻿using System.Xml.Linq;
 
-namespace Real_time_weather;
+namespace Real_time_weather.Validators;
 
 public class XmlFormatValidator : FormatValidator
 {

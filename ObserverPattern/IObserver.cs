@@ -1,4 +1,4 @@
-﻿namespace Real_time_weather;
+﻿namespace Real_time_weather.ObserverPattern;
 
 public interface IObserver<in T>
 {

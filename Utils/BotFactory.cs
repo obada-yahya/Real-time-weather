@@ -1,4 +1,6 @@
-﻿namespace Real_time_weather.Utils;
+﻿using Real_time_weather.Bots;
+
+namespace Real_time_weather.Utils;
 
 public class BotFactory
 {

@@ -1,6 +1,8 @@
 ﻿using System.Text.Json.Nodes;
+using Real_time_weather.Utils;
+using Real_time_weather.Validators;
 
-namespace Real_time_weather;
+namespace Real_time_weather.DataFormats;
 
 public class JsonReadStrategy : IReadStrategy
 {

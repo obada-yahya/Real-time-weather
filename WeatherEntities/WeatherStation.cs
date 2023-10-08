@@ -1,8 +1,10 @@
-﻿namespace Real_time_weather;
+﻿using Real_time_weather.ObserverPattern;
+
+namespace Real_time_weather.WeatherEntities;
 
 public class WeatherStation : IObservable
 {
-    private readonly List<IObserver<LocationWeatherInfo>> _subscribers;
+    private readonly List<ObserverPattern.IObserver<LocationWeatherInfo>> _subscribers;
     private string _location;
     private float _temperature;
     private float _humidity;
@@ -44,16 +46,16 @@ public class WeatherStation : IObservable
     
     public WeatherStation(LocationWeatherInfo weatherInfo)
     {
-        _subscribers = new List<IObserver<LocationWeatherInfo>>();
+        _subscribers = new List<ObserverPattern.IObserver<LocationWeatherInfo>>();
         UpdateWholeWeatherData(weatherInfo);
     }
     
-    public void Add(IObserver<LocationWeatherInfo> subscriber)
+    public void Add(ObserverPattern.IObserver<LocationWeatherInfo> subscriber)
     {
         _subscribers.Add(subscriber);
     }
 
-    public void Remove(IObserver<LocationWeatherInfo> subscriber)
+    public void Remove(ObserverPattern.IObserver<LocationWeatherInfo> subscriber)
     {
         _subscribers.Remove(subscriber);
     }
